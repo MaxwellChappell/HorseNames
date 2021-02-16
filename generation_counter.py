@@ -58,7 +58,7 @@ def horse_set_creator(name, names, gen_start):
             names[slash].generations[gen_start+generation] += 1
     return  expand_names
 
-def save_simple(horse, horse_list):
+def save_simple(horse_list):
     """
     Creates a simple txt with horse information
     
@@ -73,7 +73,7 @@ def save_simple(horse, horse_list):
         file.write('\n')
     file.close()
 
-def save_names_only(horse, horse_list):
+def save_names_only(horse_list):
     """
     Creates a simple txt with horse names
     
@@ -88,7 +88,7 @@ def save_names_only(horse, horse_list):
         file.write('\n')
     file.close()
 
-def save_complex_data(horse, horse_list):
+def save_complex_data(horse_list):
     """
     Creates a csv and txt with differnt generation data
     
@@ -131,23 +131,28 @@ def start(horse_link, horse_name, horse_list):
     horse_list[horse_link] = HorseBit(horse_name, [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],1)
     new_names = {horse_link: 0}
     while len(new_names) != 0:
-        print("Total: " + str(len(horse_set)))
+        print("Total: " + str(len(horse_list)))
         print("To Do: " + str(len(new_names)))
         print("Done: " + str(count))
         print()
         horse = list(new_names.keys())[0]
         gen = new_names[horse]
         new_names.pop(horse)
-        new_names |= horse_set_creator(horse, horse_set, gen)
+        new_names |= horse_set_creator(horse, horse_list, gen)
 
-link = '/herod'
-name = 'HEROD'
 
-if os.path.isdir(link[1:]) == False:
-    os.mkdir(os.path.join(os.getcwd(), link[1:]))
-os.chdir(link[1:])
-horse_set = {}
-start(link, name, horse_set)
-save_simple(link, horse_set)
-save_names_only(link, horse_set)
-save_complex_data(link, horse_set)
+def main():
+    link = '/grand+fappy'
+    name = 'GRAND FAPPY'
+
+    if os.path.isdir(link[1:]) == False:
+        os.mkdir(link[1:])
+    os.chdir(link[1:])
+    horse_set = {}
+    start(link, name, horse_set)
+    save_simple(horse_set)
+    save_names_only(horse_set)
+    save_complex_data(horse_set)
+
+if __name__ == "__main__":
+    main()
