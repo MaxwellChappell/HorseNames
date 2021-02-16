@@ -5,6 +5,7 @@ import re
 from dataclasses import dataclass
 from typing import List
 import pandas as pd
+import os
 
 http = httplib2.Http()
 
@@ -64,7 +65,7 @@ def save_simple(horse, horse_list):
     horse: expecting the same pedigree link format, becomes name of .txt
     horse_list: the whole horse dictionary
     """
-    file = open(str(horse[1:]) +".txt", "w+")
+    file = open("simple.txt", "w+")
     for horse in horse_list:
         file.write(horse)
         file.write('\n')
@@ -79,10 +80,10 @@ def save_names_only(horse, horse_list):
     horse: expecting the same pedigree link format, becomes name of .txt
     horse_list: the whole horse dictionary
     """
-    file = open(str(horse[1:]) +"_names.txt", "w+")
+    file = open("names.txt", "w+")
     for horse in horse_list:
         file.write(horse)
-        file.write('\n')
+        file.write(': ')
         file.write(str(horse_list[horse].name))
         file.write('\n')
     file.close()
@@ -103,7 +104,7 @@ def save_complex_data(horse, horse_list):
 
     df = pd.DataFrame(data)
     df.columns = ["Link","Name","Apeared","1st Generation", "2nd Generation", "2rd Generation","4th Generation","5","6","7","8","9","10","11",'12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45']
-    df.to_csv(str(horse[1:])+".csv")
+    df.to_csv("sheet.csv")
 
     gen_data= {}
     for i in range(46):
@@ -116,7 +117,7 @@ def save_complex_data(horse, horse_list):
                             gen_percent = item[i] / (2**(i-3))
                             gen_data[i-3].append([item[0],gen_count, gen_percent])
 
-    file = open(str(horse[1:])+"_generations.txt", "w+")
+    file = open("generations.txt", "w+")
     for i in gen_data:
             file.write(str(i) +":\n")
             for horse in gen_data[i]:
@@ -139,8 +140,12 @@ def start(horse_link, horse_name, horse_list):
         new_names.pop(horse)
         new_names |= horse_set_creator(horse, horse_set, gen)
 
-link = '/grand+fappy'
-name = 'GRAND FAPPY'
+link = '/herod'
+name = 'HEROD'
+
+if os.path.isdir(link[1:]) == False:
+    os.mkdir(os.path.join(os.getcwd(), link[1:]))
+os.chdir(link[1:])
 horse_set = {}
 start(link, name, horse_set)
 save_simple(link, horse_set)
